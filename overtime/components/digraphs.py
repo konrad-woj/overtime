@@ -1,8 +1,5 @@
-
 from overtime.components.graphs import Graph, TemporalGraph
-from overtime.components.nodes import Nodes
 from overtime.components.arcs import Arcs, TemporalArcs
-
 
 
 class DiGraph(Graph):
@@ -45,7 +42,6 @@ class DiGraph(Graph):
         if data is not None:
             # build the graph using this data.
             self.build(data)
-        
 
 
 class TemporalDiGraph(TemporalGraph):
@@ -80,7 +76,6 @@ class TemporalDiGraph(TemporalGraph):
     """
     _staticclass = DiGraph
 
-
     def __init__(self, label, data=None):
         super().__init__(label)
         self.directed = True
@@ -90,7 +85,6 @@ class TemporalDiGraph(TemporalGraph):
         if data is not None:
             # build the graph using this data.
             self.build(data)
-
 
     def get_snapshot(self, time):
         """
@@ -120,7 +114,6 @@ class TemporalDiGraph(TemporalGraph):
             graph.add_node(node.label)
         # return the snapshot.
         return graph
-
 
     def get_underlying_graph(self):
         """

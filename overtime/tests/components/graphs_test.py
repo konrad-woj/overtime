@@ -5,7 +5,6 @@ from overtime.components import Graph, TemporalGraph
 from overtime.inputs import CsvInput
 
 
-
 class GraphBuildTest(unittest.TestCase):
     """
         Standalone test for the Graph build method.
@@ -20,7 +19,6 @@ class GraphBuildTest(unittest.TestCase):
         graph.nodes
         self.assertTrue(bool(graph.nodes.set))
         self.assertTrue(bool(graph.edges.set))
-
 
 
 class GraphTest(unittest.TestCase):
@@ -40,14 +38,12 @@ class GraphTest(unittest.TestCase):
         for edge in ['ab', 'bc', 'cd', 'ef', 'fd', 'ec', 'af', 'db']:
             self.graph.add_edge(edge[0], edge[1])
 
-    
     def test_add_node(self):
         """
             Test that a node can be added to the graph.
         """
         node = self.graph.add_node('g')
         self.assertIn(node, self.graph.nodes.set)
-
 
     def test_add_edge(self):
         """
@@ -56,7 +52,6 @@ class GraphTest(unittest.TestCase):
         edge = self.graph.add_edge('e', 'a')
         self.assertIn(edge, self.graph.edges.set)
 
-
     def test_remove_node(self):
         """
             Test that a node can be removed from the graph.
@@ -64,14 +59,12 @@ class GraphTest(unittest.TestCase):
         self.graph.remove_node('c')
         self.assertNotIn('c', self.graph.nodes.labels())
 
-
     def test_remove_edge(self):
         """
             Test that an edge can be removed from the graph.
         """
         self.graph.remove_edge('c-e')
         self.assertNotIn('c-e', self.graph.edges.uids())
-
 
 
 class TemporalGraphBuildTest(unittest.TestCase):
@@ -87,7 +80,6 @@ class TemporalGraphBuildTest(unittest.TestCase):
         graph.build(CsvInput('./overtime/tests/data/network.csv'))
         self.assertTrue(bool(graph.nodes.set))
         self.assertTrue(bool(graph.edges.set))
-
 
 
 class TemporalGraphTest(unittest.TestCase):
@@ -123,7 +115,6 @@ class TemporalGraphTest(unittest.TestCase):
         for index, edge in edges.items():
             self.graph.add_edge(edge['node1'], edge['node2'], edge['tstart'], edge['tend'])
 
-
     def test_add_node(self):
         """
             Test that a node can be added to the temporal graph.
@@ -131,14 +122,12 @@ class TemporalGraphTest(unittest.TestCase):
         node = self.graph.add_node('f')
         self.assertIn(node, self.graph.nodes.set)
 
-
     def test_add_edge(self):
         """
             Test that an edge can be added to the temporal graph.
         """
-        edge = self.graph.add_edge('f', 'a', 3)
+        edge = self.graph.add_edge('f', 'a', 3, 3)
         self.assertIn(edge, self.graph.edges.set)
-
 
     def test_remove_node(self):
         """
@@ -147,14 +136,12 @@ class TemporalGraphTest(unittest.TestCase):
         self.graph.remove_node('c')
         self.assertNotIn('c', self.graph.nodes.labels())
 
-
     def test_remove_edge(self):
         """
             Test that an edge can be removed from the temporal graph.
         """
         self.graph.remove_edge('a-e|2-2')
         self.assertNotIn('a-e|2-2', self.graph.edges.uids())
-
 
     def test_get_snapshot(self):
         """
@@ -166,7 +153,6 @@ class TemporalGraphTest(unittest.TestCase):
             sorted(snapshot.edges.labels())
         )
 
-
     def test_get_underlying_graph(self):
         """
             Test getting the underlying graph of the temporal graph.
@@ -176,7 +162,6 @@ class TemporalGraphTest(unittest.TestCase):
             ['a-b', 'a-c', 'a-d', 'a-e', 'b-c', 'b-d', 'b-e', 'c-d', 'd-e'],
             sorted(underlying.edges.labels())
         )
-
 
     def test_get_temporal_subgraph(self):
         """

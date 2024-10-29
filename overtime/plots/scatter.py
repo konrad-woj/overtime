@@ -1,8 +1,6 @@
 
-import math, random
+import random
 import matplotlib.pyplot as plt
-from matplotlib import cm
-from matplotlib.colors import ListedColormap
 from matplotlib.lines import Line2D
 from overtime.plots.plot import Plot
 

@@ -15,11 +15,11 @@
     <style>.box {  }; </style>
         <button onclick="downloadCfg()">Save Config</button>
     <div class="box">
-                <div id="75ac7db474d04862a96bab49863884f4" class="chart-container" style="width:800px; height:500px;"></div>
+                <div id="bda7fd4a30d64ff28ada43a66aaba578" class="chart-container" style="width:800px; height:500px;"></div>
     <script>
-        var chart_75ac7db474d04862a96bab49863884f4 = echarts.init(
-            document.getElementById('75ac7db474d04862a96bab49863884f4'), 'white', {renderer: 'canvas'});
-        var option_75ac7db474d04862a96bab49863884f4 = {
+        var chart_bda7fd4a30d64ff28ada43a66aaba578 = echarts.init(
+            document.getElementById('bda7fd4a30d64ff28ada43a66aaba578'), 'white', {renderer: 'canvas'});
+        var option_bda7fd4a30d64ff28ada43a66aaba578 = {
     "animation": true,
     "animationThreshold": 2000,
     "animationDuration": 1000,
@@ -85,22 +85,16 @@
             "focusNodeAdjacency": true,
             "data": [
                 {
-                    "name": "f",
-                    "fixed": false,
-                    "value": 2,
-                    "category": 1
-                },
-                {
                     "name": "e",
                     "fixed": false,
                     "value": 5,
                     "category": 0
                 },
                 {
-                    "name": "g",
+                    "name": "d",
                     "fixed": false,
-                    "value": 2,
-                    "category": 1
+                    "value": 4,
+                    "category": 0
                 },
                 {
                     "name": "a",
@@ -111,14 +105,8 @@
                 {
                     "name": "c",
                     "fixed": false,
-                    "value": 2,
+                    "value": 1,
                     "category": 1
-                },
-                {
-                    "name": "d",
-                    "fixed": false,
-                    "value": 5,
-                    "category": 0
                 },
                 {
                     "name": "b",
@@ -147,20 +135,6 @@
             "edgeSymbolSize": 10,
             "links": [
                 {
-                    "source": "e",
-                    "target": "a",
-                    "value": [
-                        "{start time: 1, end time: 1}"
-                    ],
-                    "lineStyle": {
-                        "show": true,
-                        "width": 1,
-                        "opacity": 1,
-                        "curveness": 0.3,
-                        "type": "solid"
-                    }
-                },
-                {
                     "source": "a",
                     "target": "e",
                     "value": [
@@ -178,7 +152,7 @@
                     "source": "e",
                     "target": "b",
                     "value": [
-                        "{start time: 5, end time: 5}"
+                        "{start time: 4, end time: 4}"
                     ],
                     "lineStyle": {
                         "show": true,
@@ -191,20 +165,6 @@
                 {
                     "source": "b",
                     "target": "a",
-                    "value": [
-                        "{start time: 5, end time: 5}"
-                    ],
-                    "lineStyle": {
-                        "show": true,
-                        "width": 1,
-                        "opacity": 1,
-                        "curveness": 0.3,
-                        "type": "solid"
-                    }
-                },
-                {
-                    "source": "g",
-                    "target": "f",
                     "value": [
                         "{start time: 5, end time: 5}"
                     ],
@@ -274,21 +234,6 @@
                     }
                 },
                 {
-                    "source": "f",
-                    "target": "g",
-                    "value": [
-                        "{start time: 8, end time: 8}",
-                        "{start time: 15, end time: 15}"
-                    ],
-                    "lineStyle": {
-                        "show": true,
-                        "width": 1,
-                        "opacity": 1,
-                        "curveness": 0.3,
-                        "type": "solid"
-                    }
-                },
-                {
                     "source": "d",
                     "target": "b",
                     "value": [
@@ -336,7 +281,7 @@
                     "source": "c",
                     "target": "a",
                     "value": [
-                        "{start time: 11, end time: 11}"
+                        "{start time: 12, end time: 12}"
                     ],
                     "lineStyle": {
                         "show": true,
@@ -404,13 +349,13 @@
         }
     ]
 };
-        chart_75ac7db474d04862a96bab49863884f4.setOption(option_75ac7db474d04862a96bab49863884f4);
+        chart_bda7fd4a30d64ff28ada43a66aaba578.setOption(option_bda7fd4a30d64ff28ada43a66aaba578);
     </script>
 <br/>    </div>
     <script>
-            $('#75ac7db474d04862a96bab49863884f4').resizable().draggable().css('border-style', 'dashed').css('border-width', '1px');$("#75ac7db474d04862a96bab49863884f4>div:nth-child(1)").width("100%").height("100%");
-            new ResizeSensor(jQuery('#75ac7db474d04862a96bab49863884f4'), function() { chart_75ac7db474d04862a96bab49863884f4.resize()});
-            var charts_id = ['75ac7db474d04862a96bab49863884f4'];
+            $('#bda7fd4a30d64ff28ada43a66aaba578').resizable().draggable().css('border-style', 'dashed').css('border-width', '1px');$("#bda7fd4a30d64ff28ada43a66aaba578>div:nth-child(1)").width("100%").height("100%");
+            new ResizeSensor(jQuery('#bda7fd4a30d64ff28ada43a66aaba578'), function() { chart_bda7fd4a30d64ff28ada43a66aaba578.resize()});
+            var charts_id = ['bda7fd4a30d64ff28ada43a66aaba578'];
 function downloadCfg () {
     const fileName = 'chart_config.json'
     let downLink = document.createElement('a')

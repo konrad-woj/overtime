@@ -1,9 +1,6 @@
 
 import math
-from random import shuffle
-import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.lines as lines
 from overtime.plots.plot import Plot
 from overtime.plots.utils import vector_angle, bezier, circle_label_angle
 

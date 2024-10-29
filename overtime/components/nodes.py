@@ -3,7 +3,6 @@ import math
 import pandas as pd
 
 
-
 class Node:
     """
         A class to represent a node on a graph.
@@ -36,7 +35,6 @@ class Node:
         self.graph = graph
         self.data = dict()
 
-
     def print(self):
         """
             A method of Node.
@@ -46,7 +44,6 @@ class Node:
                 None, prints the label of the node.
         """
         print(self.label)
-
 
     def node1of(self, time=None):
         """
@@ -73,7 +70,6 @@ class Node:
         # return the edges that have this node as their 'node1' property.
         return edges.get_edge_by_node1(self.label)
 
-    
     def sourceof(self, time=None):
         """
             A method of Node.
@@ -91,7 +87,6 @@ class Node:
         """
         # return node1of (analogous property)
         return self.node1of(time)
-
 
     def node2of(self, time=None):
         """
@@ -118,7 +113,6 @@ class Node:
         # return the edges that have this node as their 'node2' property.
         return edges.get_edge_by_node2(self.label)
 
-    
     def sinkof(self, time=None):
         """
             A method of Node.
@@ -136,7 +130,6 @@ class Node:
         """
         # return node2of (analogous property)
         return self.node2of(time)
-
 
     def nodeof(self, time=None):
         """
@@ -162,7 +155,6 @@ class Node:
             edges = self.graph.edges
         # return the edges that have this node as their 'node1' or 'node2' property.
         return edges.get_edge_by_node(self.label)
-
 
     def neighbours(self, time=None):
         """
@@ -196,7 +188,6 @@ class Node:
                 # add the node as a neighbour.
                 neighbours.add(edge.node1.label)
         return neighbours
-
 
     def temporal_neighbours(self, time=None):
         """
@@ -237,7 +228,6 @@ class Node:
             return neighbours
 
 
-
 class ForemostNode(Node):
     """
         A class to represent a node on a graph.
@@ -274,7 +264,6 @@ class ForemostNode(Node):
         self.time = time
         self.data['foremost_time'] = time
 
-
     def print(self):
         """
             A method of ForemostNode.
@@ -284,7 +273,6 @@ class ForemostNode(Node):
                 None, prints the label of the node and the foremost time.
         """
         print(self.label, self.time)
-
 
 
 class Nodes:
@@ -315,7 +303,6 @@ class Nodes:
         self.set = set() # unorderd, unindexed, unique collection of node objects
         self.graph = graph
 
-
     def aslist(self):
         """
             A method of Nodes.
@@ -327,7 +314,6 @@ class Nodes:
         """
         return list(self.set)
 
-
     def as_ordered_list(self):
         """
             A method of Nodes.
@@ -338,7 +324,6 @@ class Nodes:
                 A list of the nodes, ordered by label.
         """
         return sorted(list(self.set), key=lambda x:x.label, reverse=False)
-
 
     def add(self, label):
         """
@@ -361,7 +346,6 @@ class Nodes:
         # return the node object (get or create).
         return self.get(label)
 
-
     def remove(self, label):
         """
             A method of Nodes.
@@ -382,7 +366,6 @@ class Nodes:
         else:
             self.set.remove(self.get(label))
             return True
-
 
     def subset(self, alist):
         """
@@ -408,7 +391,6 @@ class Nodes:
         # return the new collection of nodes.
         return subset
 
-
     def get(self, label):
         """
             A method of Nodes.
@@ -426,7 +408,6 @@ class Nodes:
         """
         return next((node for node in self.set if node.label == label), None)
 
-
     def exists(self, label):
         """
             A method of Nodes.
@@ -439,12 +420,11 @@ class Nodes:
             Returns:
             --------
             exists : Boolean
-                True/false depending of whether node with label 'label' exists in the collection.
+                True/false depending on whether node with label 'label' exists in the collection.
             
         """
         return True if self.get(label) is not None else False
 
-    
     def count(self):
         """
             A method of Nodes.
@@ -456,7 +436,6 @@ class Nodes:
             
         """
         return len(self.set)
-
 
     def labels(self):
         """
@@ -470,7 +449,6 @@ class Nodes:
         """
         return [node.label for node in self.set]
 
-
     def print(self):
         """
             A method of Nodes.
@@ -483,15 +461,14 @@ class Nodes:
         for node in self.set:
             node.print()
 
-
     def add_data(self, csv_path):
         """
             A method of Nodes.
 
             Parameter(s):
             -------------
-            csv_path : String
-                The path of the csv file.
+            csv_path : String or pandas.DataFrame
+                The path of the csv file or a dataframe.
 
             Returns:
             --------
@@ -499,7 +476,10 @@ class Nodes:
                 The csv data must correspond to the nodes in the node collection.
         """
         # create a data frame from the csv file.
-        data_frame = pd.read_csv(csv_path)
+        if isinstance(csv_path, pd.DataFrame):
+            data_frame = csv_path
+        else:
+            data_frame = pd.read_csv(csv_path)
         # for each row in the data frame.
         for index, row in data_frame.iterrows():
             # if a 'label' column exists.
@@ -509,7 +489,6 @@ class Nodes:
                 # for each column, add the data to this node.
                 for col in data_frame.columns:
                     node.data[col] = row[col]
-
 
 
 class ForemostNodes(Nodes):
@@ -539,7 +518,6 @@ class ForemostNodes(Nodes):
     def __init__(self, graph):
         super().__init__(graph)
 
-
     def add(self, label, time=float('inf')):
         """
             A method of ForemostNodes.
@@ -563,7 +541,6 @@ class ForemostNodes(Nodes):
         # return the node object (get or create).
         return self.get(label)
 
-
     def times(self):
         """
             A method of ForemostNodes.
@@ -574,7 +551,6 @@ class ForemostNodes(Nodes):
                 A list of node times in the collection.
         """
         return [node.time for node in self.set]
-
 
     def get_reachable(self):
         """

@@ -1,3 +1,5 @@
+from typing import Callable, Tuple, Union
+
 import overtime as ot
 import copy
 import numpy as np
@@ -5,7 +7,10 @@ from pyecharts import options as opts
 from pyecharts.charts import Graph
 from pyecharts.charts import Page
 from pyecharts.charts import Timeline
+from pyecharts.options.series_options import LabelOpts, ItemStyleOpts
+from pyecharts.options.global_options import TooltipOpts
 from overtime.algorithms import edgeDeletion
+from overtime.components import TemporalDiGraph
 
 
 def echarts_Circular(graph,
@@ -81,7 +86,8 @@ def echarts_Circular(graph,
     if show_node_value:
         for i in range(len(graph.nodes.aslist())):
             # calculate reachability for each nodes
-            reachability = ot.calculate_reachability(graph, graph.nodes.labels()[i])
+            reachability = ot.calculate_reachability(graph,
+                                                     graph.nodes.labels()[i])
             if reachability > h:
                 # nodes with reachability more than h will be assigned category 0
                 nodes.append(opts.GraphNode(name=graph.nodes.labels()[i],
@@ -95,7 +101,8 @@ def echarts_Circular(graph,
     else:
         for i in range(len(graph.nodes.aslist())):
             # calculate reachability for each nodes
-            reachability = ot.calculate_reachability(graph, graph.nodes.labels()[i])
+            reachability = ot.calculate_reachability(graph,
+                                                     graph.nodes.labels()[i])
             if reachability > h:
                 # nodes with reachability more than h will be assigned category 0
                 nodes.append(opts.GraphNode(name=graph.nodes.labels()[i],
@@ -120,16 +127,20 @@ def echarts_Circular(graph,
             for j in range(len(graph.edges.ulabels())):
                 if graph.edges.labels()[i] == graph.edges.ulabels()[j]:
                     if j < len(edge_value):
-                        edge_value[j].append('{start time: ' + str(graph.edges.start_times()[i]) + ', end time: ' + str(
+                        edge_value[j].append('{start time: ' + str(
+                            graph.edges.start_times()[
+                                i]) + ', end time: ' + str(
                             graph.edges.end_times()[i]) + '}')
                     else:
                         tmp_edge_value = []
                         tmp_edge_value.append(
-                            '{start time: ' + str(graph.edges.start_times()[i]) + ', end time: ' + str(
+                            '{start time: ' + str(graph.edges.start_times()[
+                                                      i]) + ', end time: ' + str(
                                 graph.edges.end_times()[i]) + '}')
                         edge_value.append(tmp_edge_value)
             # print the rate of progress
-            print('rate of progress: {}%'.format((i + 1) / len(graph.edges.labels()) * 100))
+            print('rate of progress: {}%'.format(
+                (i + 1) / len(graph.edges.labels()) * 100))
 
         # check duplicate edges
         # 1. get nodes' name by spliting the edge labels
@@ -155,7 +166,9 @@ def echarts_Circular(graph,
                                         target=tmp[1],
                                         value=edge_value[i],
                                         linestyle_opts=opts.LineStyleOpts(
-                                            curve=curve_list[int(accumulator[i]) % len(curve_list)])
+                                            curve=curve_list[
+                                                int(accumulator[i]) % len(
+                                                    curve_list)])
 
                                         ))
     else:
@@ -176,20 +189,24 @@ def echarts_Circular(graph,
             links.append(opts.GraphLink(source=tmp[0],
                                         target=tmp[1],
                                         linestyle_opts=opts.LineStyleOpts(
-                                            curve=curve_list[int(accumulator[i]) % len(curve_list)])
+                                            curve=curve_list[
+                                                int(accumulator[i]) % len(
+                                                    curve_list)])
 
                                         ))
 
     # initialize categories list
     categories = [
-        opts.GraphCategory(name='nodes with reachability more than {}'.format(h)),
-        opts.GraphCategory(name='nodes with reachability less than or equal to {}'.format(h))
+        opts.GraphCategory(
+            name='nodes with reachability more than {}'.format(h)),
+        opts.GraphCategory(
+            name='nodes with reachability less than or equal to {}'.format(h))
     ]
 
     # generate an html file of the graph
     c = (
         Graph(init_opts=opts.InitOpts(width=width, height=height))
-            .add(
+        .add(
             "",
             nodes=nodes,
             links=links,
@@ -202,12 +219,16 @@ def echarts_Circular(graph,
             edge_symbol=['circle', 'arrow'],
             edge_symbol_size=10
         )
-            .set_global_opts(
+        .set_global_opts(
             title_opts=opts.TitleOpts(title=title, subtitle=subtitle,
-                                      title_textstyle_opts=opts.TextStyleOpts(font_size=40),
-                                      subtitle_textstyle_opts=opts.TextStyleOpts(font_size=20)),
-            legend_opts=opts.LegendOpts(orient="vertical", pos_left="2%", pos_top="20%",
-                                        textstyle_opts=opts.TextStyleOpts(font_size=20)),
+                                      title_textstyle_opts=opts.TextStyleOpts(
+                                          font_size=40),
+                                      subtitle_textstyle_opts=opts.TextStyleOpts(
+                                          font_size=20)),
+            legend_opts=opts.LegendOpts(orient="vertical", pos_left="2%",
+                                        pos_top="20%",
+                                        textstyle_opts=opts.TextStyleOpts(
+                                            font_size=20)),
         )
     )
 
@@ -287,7 +308,8 @@ def echarts_Force(graph,
     if show_node_value:
         for i in range(len(graph.nodes.aslist())):
             # calculate reachability for each nodes
-            reachability = ot.calculate_reachability(graph, graph.nodes.labels()[i])
+            reachability = ot.calculate_reachability(graph,
+                                                     graph.nodes.labels()[i])
             if reachability > h:
                 # nodes with reachability more than h will be assigned category 0
                 nodes.append(opts.GraphNode(name=graph.nodes.labels()[i],
@@ -301,7 +323,8 @@ def echarts_Force(graph,
     else:
         for i in range(len(graph.nodes.aslist())):
             # calculate reachability for each nodes
-            reachability = ot.calculate_reachability(graph, graph.nodes.labels()[i])
+            reachability = ot.calculate_reachability(graph,
+                                                     graph.nodes.labels()[i])
             if reachability > h:
                 nodes.append(opts.GraphNode(name=graph.nodes.labels()[i],
                                             category=0))
@@ -321,16 +344,20 @@ def echarts_Force(graph,
             for j in range(len(graph.edges.ulabels())):
                 if graph.edges.labels()[i] == graph.edges.ulabels()[j]:
                     if j < len(edge_value):
-                        edge_value[j].append('{start time: ' + str(graph.edges.start_times()[i]) + ', end time: ' + str(
+                        edge_value[j].append('{start time: ' + str(
+                            graph.edges.start_times()[
+                                i]) + ', end time: ' + str(
                             graph.edges.end_times()[i]) + '}')
                     else:
                         tmp_edge_value = []
                         tmp_edge_value.append(
-                            '{start time: ' + str(graph.edges.start_times()[i]) + ', end time: ' + str(
+                            '{start time: ' + str(graph.edges.start_times()[
+                                                      i]) + ', end time: ' + str(
                                 graph.edges.end_times()[i]) + '}')
                         edge_value.append(tmp_edge_value)
             # print the rate of progress
-            print('rate of progress: {}%'.format((i + 1) / len(graph.edges.labels()) * 100))
+            print('rate of progress: {}%'.format(
+                (i + 1) / len(graph.edges.labels()) * 100))
 
         for i in range(len(graph.edges.ulabels())):
             tmp = graph.edges.ulabels()[i].split('-')
@@ -350,14 +377,16 @@ def echarts_Force(graph,
 
     # initialize categories list
     categories = [
-        opts.GraphCategory(name='nodes with reachability more than {}'.format(h)),
-        opts.GraphCategory(name='nodes with reachability less than or equal to {}'.format(h))
+        opts.GraphCategory(
+            name='nodes with reachability more than {}'.format(h)),
+        opts.GraphCategory(
+            name='nodes with reachability less than or equal to {}'.format(h))
     ]
 
     # generate an html file of the graph
     c = (
         Graph(init_opts=opts.InitOpts(width=width, height=height))
-            .add(
+        .add(
             "",
             nodes=nodes,
             links=links,
@@ -372,12 +401,16 @@ def echarts_Force(graph,
             edge_symbol=['circle', 'arrow'],
             edge_symbol_size=10
         )
-            .set_global_opts(
+        .set_global_opts(
             title_opts=opts.TitleOpts(title=title, subtitle=subtitle,
-                                      title_textstyle_opts=opts.TextStyleOpts(font_size=40),
-                                      subtitle_textstyle_opts=opts.TextStyleOpts(font_size=20)),
-            legend_opts=opts.LegendOpts(orient="vertical", pos_left="2%", pos_top="20%",
-                                        textstyle_opts=opts.TextStyleOpts(font_size=20)),
+                                      title_textstyle_opts=opts.TextStyleOpts(
+                                          font_size=40),
+                                      subtitle_textstyle_opts=opts.TextStyleOpts(
+                                          font_size=20)),
+            legend_opts=opts.LegendOpts(orient="vertical", pos_left="2%",
+                                        pos_top="20%",
+                                        textstyle_opts=opts.TextStyleOpts(
+                                            font_size=20)),
         )
     )
 
@@ -476,13 +509,16 @@ def echarts_Location(graph,
     if show_node_value:
         for i in range(len(graph.nodes.aslist())):
             # calculate reachability for each nodes
-            reachability = ot.calculate_reachability(graph, graph.nodes.labels()[i])
+            reachability = ot.calculate_reachability(graph,
+                                                     graph.nodes.labels()[i])
             if reachability > h:
                 nodes.append(opts.GraphNode(name=graph.nodes.labels()[i],
                                             category=0,
                                             x=graph.nodes.aslist()[i].data[x],
                                             y=graph.nodes.aslist()[i].data[y],
-                                            label_opts=opts.LabelOpts(is_show=showName, font_size=font_size),
+                                            label_opts=opts.LabelOpts(
+                                                is_show=showName,
+                                                font_size=font_size),
                                             value=reachability
 
                                             ))
@@ -491,19 +527,24 @@ def echarts_Location(graph,
                                             category=1,
                                             x=graph.nodes.aslist()[i].data[x],
                                             y=graph.nodes.aslist()[i].data[y],
-                                            label_opts=opts.LabelOpts(is_show=showName, font_size=font_size),
+                                            label_opts=opts.LabelOpts(
+                                                is_show=showName,
+                                                font_size=font_size),
                                             value=reachability
                                             ))
     else:
         for i in range(len(graph.nodes.aslist())):
             # calculate reachability for each nodes
-            reachability = ot.calculate_reachability(graph, graph.nodes.labels()[i])
+            reachability = ot.calculate_reachability(graph,
+                                                     graph.nodes.labels()[i])
             if reachability > h:
                 nodes.append(opts.GraphNode(name=graph.nodes.labels()[i],
                                             category=0,
                                             x=graph.nodes.aslist()[i].data[x],
                                             y=graph.nodes.aslist()[i].data[y],
-                                            label_opts=opts.LabelOpts(is_show=showName, font_size=font_size)
+                                            label_opts=opts.LabelOpts(
+                                                is_show=showName,
+                                                font_size=font_size)
 
                                             ))
             else:
@@ -511,7 +552,9 @@ def echarts_Location(graph,
                                             category=1,
                                             x=graph.nodes.aslist()[i].data[x],
                                             y=graph.nodes.aslist()[i].data[y],
-                                            label_opts=opts.LabelOpts(is_show=showName, font_size=font_size)
+                                            label_opts=opts.LabelOpts(
+                                                is_show=showName,
+                                                font_size=font_size)
 
                                             ))
 
@@ -526,16 +569,20 @@ def echarts_Location(graph,
             for j in range(len(graph.edges.ulabels())):
                 if graph.edges.labels()[i] == graph.edges.ulabels()[j]:
                     if j < len(edge_value):
-                        edge_value[j].append('{start time: ' + str(graph.edges.start_times()[i]) + ', end time: ' + str(
+                        edge_value[j].append('{start time: ' + str(
+                            graph.edges.start_times()[
+                                i]) + ', end time: ' + str(
                             graph.edges.end_times()[i]) + '}')
                     else:
                         tmp_edge_value = []
                         tmp_edge_value.append(
-                            '{start time: ' + str(graph.edges.start_times()[i]) + ', end time: ' + str(
+                            '{start time: ' + str(graph.edges.start_times()[
+                                                      i]) + ', end time: ' + str(
                                 graph.edges.end_times()[i]) + '}')
                         edge_value.append(tmp_edge_value)
             # print the rate of progress
-            print('rate of progress: {}%'.format((i + 1) / len(graph.edges.labels()) * 100))
+            print('rate of progress: {}%'.format(
+                (i + 1) / len(graph.edges.labels()) * 100))
 
         for i in range(len(graph.edges.ulabels())):
             tmp = graph.edges.ulabels()[i].split('-')
@@ -557,31 +604,38 @@ def echarts_Location(graph,
 
     # initialize categories list
     categories = [
-        opts.GraphCategory(name='nodes with reachability more than {}'.format(h)),
-        opts.GraphCategory(name='nodes with reachability less than or equal to {}'.format(h))
+        opts.GraphCategory(
+            name='nodes with reachability more than {}'.format(h)),
+        opts.GraphCategory(
+            name='nodes with reachability less than or equal to {}'.format(h))
     ]
 
     # generate an html file of the graph
     c = (
         Graph(init_opts=opts.InitOpts(width=width, height=height))
-            .add(
+        .add(
             "",
             nodes=nodes,
             links=links,
             categories=categories,
             layout="none",
             symbol_size=symbol_size,
-            linestyle_opts=opts.LineStyleOpts(is_show=True, curve=0.1, width=line_width),
+            linestyle_opts=opts.LineStyleOpts(is_show=True, curve=0.1,
+                                              width=line_width),
             label_opts=opts.LabelOpts(position="right"),
             edge_symbol=['circle', 'arrow'],
             edge_symbol_size=symbol_size
         )
-            .set_global_opts(
+        .set_global_opts(
             title_opts=opts.TitleOpts(title=title, subtitle=subtitle,
-                                      title_textstyle_opts=opts.TextStyleOpts(font_size=40),
-                                      subtitle_textstyle_opts=opts.TextStyleOpts(font_size=20)),
-            legend_opts=opts.LegendOpts(orient="vertical", pos_left="2%", pos_top="20%",
-                                        textstyle_opts=opts.TextStyleOpts(font_size=20)),
+                                      title_textstyle_opts=opts.TextStyleOpts(
+                                          font_size=40),
+                                      subtitle_textstyle_opts=opts.TextStyleOpts(
+                                          font_size=20)),
+            legend_opts=opts.LegendOpts(orient="vertical", pos_left="2%",
+                                        pos_top="20%",
+                                        textstyle_opts=opts.TextStyleOpts(
+                                            font_size=20)),
         )
     )
 
@@ -593,44 +647,76 @@ def echarts_Location(graph,
     return c
 
 
-def echarts_Timeline(graph,
-                     h,
-                     x='',
-                     y='',
-                     symbol_size=20,
-                     line_width=1,
-                     repulsion=500,
-                     is_draggable=True,
-                     width="800px",
-                     height="500px",
-                     path='timelineExample.html',
-                     title='Timeline_graph',
-                     subtitle='',
-                     pageLayout=Page.DraggablePageLayout,
-                     layout="circular",
-                     show_node_value=True,
-                     render=True):
+def echarts_Timeline(graph: TemporalDiGraph,
+                     h: int = None,
+                     x: str = '',
+                     y: str = '',
+                     line_width: int = 1,
+                     repulsion: int = 500,
+                     gravity: float = 0.2,
+                     is_draggable: bool = True,
+                     width: str = "800px",
+                     height: str = "600px",
+                     path: str = 'timeline_graph.html',
+                     title: str = '',
+                     subtitle: str = '',
+                     page_layout: Page = Page.DraggablePageLayout,
+                     layout: str = "circular",
+                     render: bool = True,
+                     node_symbol: int = None,
+                     node_symbol_size: int = 20,
+                     node_value_col: str = 'value',
+                     node_size_col: str = 'size',
+                     node_size_scaler_func: Callable[[float], float] = lambda x: x,
+                     node_category_col: str = 'category',
+                     node_label_opts: LabelOpts = None,
+                     edge_symbol: int = None,
+                     edge_symbol_size: int = 10,
+                     edge_size_scaler_func: Callable[[float], float] = lambda x: 100 * x,
+                     edge_curve: float = 0.1,
+                     edge_label_opts: LabelOpts = None,
+                     tooltip_opts: TooltipOpts = None,
+                     itemstyle_opts: ItemStyleOpts = None) -> Graph:
     """
         A method to render a network with timeline.
+
+        Expected column names - Edgelist:
+            node1: Source node labels.
+            node2: Target node labels.
+            tstart: Time value of the first occurrence of an edge.
+            tend: Time value of the last occurrence of an edge.
+            weight: Optional. Edge weight.
+
+        Expected column names - Nodes:
+            label: Node label, same as provided in Edgelist's node1/node2.
+            value: Optional. Values or labels to be used in node tooltips.
+            size: Optional. Values used for node symbol sizes.
+            category: Optional. Values used for differentiating node colors.
+
+        The optional column names for nodes can be changed using *_col
+        arguments, e.g. all three can point to the same column.
 
         Parameter(s):
         -------------
         graph : TemporalDiGraph
-            An object which represents a temporal, directed graph consisting of nodes and temporal arcs.
+            An object which represents a temporal, directed graph consisting of
+            nodes and temporal arcs.
         h : int
-            The threshold of temporal reachability. Nodes will be assigned different color based on this value.
+            TThe threshold of temporal reachability. If not None this will
+            override categories.
         x : String
-            The name of the x coordinates of the nodes.
-            For example, in the network of London subway stations, the name of x coordinate can be 'lon' or 'lat'.
+            The name of the column containing x coordinates.
         y : String
-            The name of the y coordinates of the nodes.
-            For example, in the network of London subway stations, the name of x coordinate can be 'lon' or 'lat'.
-        symbol_size : int
-            The size of the nodes.
+            The name of the column containing y coordinates.
         line_width : int
-            The width of the edges.
+            The width of the edges, ignored if edge weight is provided.
         repulsion : int
-            The repulsion between nodes.
+            TThe repulsion between nodes. The smaller the repulsion, the more
+            chance of nodes overlapping. If force layout graph stats to spin too
+            much, consider reducing repulsion.
+        gravity : float
+            The gravity between nodes. Affects unconnected nodes and subgraphs
+            the most.
         is_draggable : boolean
             Whether the nodes are moveable.
         width: String
@@ -648,120 +734,169 @@ def echarts_Timeline(graph,
         subtitle : String
             The subtitle of the rendered image.
             Default value: ''
-        pageLayout : PageLayoutOpts
-            There are two kinds of page layout: Page.DraggablePageLayout and Page.SimplePageLayout.
-            In Page.SimplePageLayout, the width and height of the image border is stable.
-            While in Page.DraggablePageLayout, the image border can be changed.
+        page_layout : PageLayoutOpts
+            If Page.SimplePageLayout, the width and height of the image border
+            is fixed, while in Page.DraggablePageLayout, the image size can be
+            adjusted by dragging.
             Default value: Page.DraggablePageLayout
         layout : String
             There are three kinds of image layout: circular, force and none
             If the layout is none, you have to provide the x-coordinate and y-coordinate of nodes.
-        show_node_value : boolean
-            Whether show the reachability of nodes.
-            Default value: True
         render : boolean
             Whether generate the html file directly.
             Default value: True
+        node_symbol : int
+            The symbol used for nodes.
+        node_symbol_size : int
+            The size of the nodes. Ignored if node_size_col is provided.
+        node_value_col : String
+            The name of the column containing node labels.
+        node_size_col : String
+            The name of the column containing node sizes.
+        node_size_scaler_func : Callable
+            The function for scaling node sizes.
+        node_category_col : String
+            The name of the column containing node categories. Will be ignored
+            if h is not None.
+        node_label_opts : LabelOpts
+            Node label options.
+        edge_symbol : int
+            The symbol used for edges.
+        edge_symbol_size : int
+            The size of edge arrows.
+        edge_size_scaler_func : Callable
+            The function for scaling edge thickness.
+        edge_curve : float
+            The size of bending effect for edges.
+        edge_label_opts : LabelOpts
+            Edge label options.
+        tooltip_opts : TooltipOpts
+            Tooltip options.
+        itemstyle_opts : ItemStyleOpts
+            Item style options.
 
         Returns:
         --------
         c : Graph
             basic charts object in pyecharts package
     """
-
     # initialize nodes list
     nodes = []
-    if layout == 'none':
-        for i in range(len(graph.nodes.aslist())):
-            # calculate reachability for each nodes
-            reachability = ot.calculate_reachability(graph, graph.nodes.labels()[i])
+    category_dict = {}
+    category_index = -1
+    for node_index in range(len(graph.nodes.aslist())):
+        name = graph.nodes.labels()[node_index]
+        node_data = graph.nodes.aslist()[node_index].data
+        if h:
+            reachability = ot.calculate_reachability(
+                graph, graph.nodes.labels()[node_index])
+            value = reachability
             if reachability > h:
-                # nodes with reachability more than h will be assigned category 0
-                nodes.append(opts.GraphNode(name=graph.nodes.labels()[i],
-                                            x=graph.nodes.aslist()[i].data[x],
-                                            y=graph.nodes.aslist()[i].data[y],
-                                            category=0,
-                                            value=reachability))
+                category_label = f'Reachable over {h}t'
             else:
-                # nodes with reachability less than or equal to h will be assigned category 1
-                nodes.append(opts.GraphNode(name=graph.nodes.labels()[i],
-                                            x=graph.nodes.aslist()[i].data[x],
-                                            y=graph.nodes.aslist()[i].data[y],
-                                            category=1,
-                                            value=reachability))
-    else:
-        for i in range(len(graph.nodes.aslist())):
-            # calculate reachability for each nodes
-            reachability = ot.calculate_reachability(graph, graph.nodes.labels()[i])
-            if reachability > h:
-                # nodes with reachability more than h will be assigned category 0
-                nodes.append(opts.GraphNode(name=graph.nodes.labels()[i],
-                                            category=0,
-                                            value=reachability))
-            else:
-                # nodes with reachability less than or equal to h will be assigned category 1
-                nodes.append(opts.GraphNode(name=graph.nodes.labels()[i],
-                                            category=1,
-                                            value=reachability))
+                category_label = f'Reachable within {h}t'
+        else:
+            category_label = node_data.get(node_category_col)
+            value = node_data.get(node_value_col)
+
+        if category_label not in category_dict.keys():
+            category_index += 1
+            category_dict[category_label] = category_index
+
+        size = node_data.get(node_size_col)
+        if size:
+            node_symbol_size = node_size_scaler_func(size)
+
+        # nodes with reachability more than h will be assigned category 0
+        nodes.append(opts.GraphNode(name=name,
+                                    x=node_data.get(x),
+                                    y=node_data.get(y),
+                                    category=category_dict[category_label],
+                                    value=value, symbol=node_symbol,
+                                    symbol_size=node_symbol_size,
+                                    label_opts=node_label_opts))
 
     # initialize links list
-    links = []
-    for i in graph.edges.timespan():
-        tmpLinks = []
-        for j in range(len(graph.edges.labels())):
+    edges = []
+    for time in graph.edges.timespan():
+        _edges = []
+        for edge_index in range(len(graph.edges.labels())):
+            if graph.edges.start_times()[edge_index] == time:
+                _edge = graph.edges.labels()[edge_index].split('-')  # TODO: If label has '-' this will break.
+                weight = graph.edges.aslist()[edge_index].weight
+                weight = float(weight) if weight else None
+                value = (f'{{start: {graph.edges.start_times()[edge_index]}'
+                         f', end: {graph.edges.end_times()[edge_index]}')
+                linestyle_opts = opts.LineStyleOpts(is_show=True,
+                                                    curve=edge_curve,
+                                                    color="source",
+                                                    opacity=1,
+                                                    type_="solid")
+                if weight:
+                    value = f'{value}, weight: {weight}}}'
+                    linestyle_opts.update(width=edge_size_scaler_func(weight))
+                _edges.append(opts.GraphLink(source=_edge[0],
+                                             target=_edge[1],
+                                             value=value,  # type: ignore
+                                             symbol=edge_symbol,
+                                             symbol_size=edge_symbol_size,
+                                             linestyle_opts=linestyle_opts,
+                                             label_opts=edge_label_opts))
 
-            if graph.edges.start_times()[j] == i:
-                tmp = graph.edges.labels()[j].split('-')
-                edgeval = '{start time: ' + str(graph.edges.start_times()[j]) + ', end time: ' + str(
-                    graph.edges.end_times()[j]) + '}'
-                tmpLinks.append(opts.GraphLink(source=tmp[0], target=tmp[1], value=edgeval))
-        links.append(tmpLinks)
+        edges.append(_edges)
 
     # initialize categories list
-    categories = [
-        opts.GraphCategory(name='nodes with reachability more than {}'.format(h)),
-        opts.GraphCategory(name='nodes with reachability less than or equal to {}'.format(h))
-    ]
+    categories = [opts.GraphCategory(name=f'{category}')
+                  for category, _ in category_dict.items()]
 
     tl = Timeline()
-    for i in graph.edges.timespan():
+    for node in graph.edges.timespan():
         c = (
-            Graph(init_opts=opts.InitOpts(width=width, height=height))
-                .add(
+            Graph(init_opts=opts.InitOpts(width=width, height=height)).add(
                 "",
                 nodes=nodes,
-                links=links[i - graph.edges.start_times()[0]],
+                links=edges[node - graph.edges.start_times()[0]],
                 categories=categories,
                 layout=layout,
                 is_draggable=is_draggable,
                 is_rotate_label=True,
-                symbol_size=symbol_size,
-                linestyle_opts=opts.LineStyleOpts(is_show=True, curve=0.1, color="source", width=line_width),
+                repulsion=repulsion,
+                gravity=gravity,
+                symbol_size=node_symbol_size,
+                linestyle_opts=opts.LineStyleOpts(is_show=True,
+                                                  curve=edge_curve,
+                                                  color="source",
+                                                  width=line_width),
                 label_opts=opts.LabelOpts(position="right"),
-                edge_symbol=['circle', 'arrow'],
-                edge_symbol_size=10
-            )
-                .set_global_opts(
-                title_opts=opts.TitleOpts(title=title, subtitle=subtitle,
-                                          title_textstyle_opts=opts.TextStyleOpts(font_size=40),
-                                          subtitle_textstyle_opts=opts.TextStyleOpts(font_size=20)),
-                legend_opts=opts.LegendOpts(orient="vertical", pos_left="2%", pos_top="20%",
-                                            textstyle_opts=opts.TextStyleOpts(font_size=20)),
+                tooltip_opts=tooltip_opts,
+                itemstyle_opts=itemstyle_opts,
+                edge_symbol=[None, 'arrow'],
+                edge_symbol_size=edge_symbol_size,
+            ).set_global_opts(
+                title_opts=opts.TitleOpts(
+                    title=title, subtitle=subtitle,
+                    title_textstyle_opts=opts.TextStyleOpts(font_size=30),
+                    subtitle_textstyle_opts=opts.TextStyleOpts(font_size=20)),
+                legend_opts=opts.LegendOpts(
+                    orient="vertical", pos_left="2%", pos_top="20%",
+                    textstyle_opts=opts.TextStyleOpts(font_size=16)),
             )
         )
-        tl.add(c, "{}".format(i))
+        tl.add(c, "{}".format(node))
 
-    # if render is True, generate an html file
+    # if render is True, generate a html file
     if render:
-        page = Page(layout=pageLayout)
+        page = Page(layout=page_layout)
         page.add(tl)
         page.render(path)
 
     return c
 
 
-def ShowDifference(graph, algorithm, h, width='1200px', height='600px', x='', y='', layout='circular', graph_layout='',
-                   path='showDifference.html', pageLayout=Page.DraggablePageLayout, show_edge_value=True):
+def ShowDifference(graph, algorithm, h, width='1200px', height='600px', x='',
+                   y='', layout='circular', graph_layout='',
+                   path='showDifference.html',
+                   pageLayout=Page.DraggablePageLayout, show_edge_value=True):
     """
         A method to generate a html file that contains network before and after running the h/c-approximation algorithm,
         and return a set of edges E_ such that (G,λ)\E_ has temporal reachability at most h.
@@ -828,7 +963,8 @@ def ShowDifference(graph, algorithm, h, width='1200px', height='600px', x='', y=
                               width=width,
                               height=height,
                               show_edge_value=show_edge_value,
-                              title='network before running {}-approximation algorithm'.format(algorithm),
+                              title='network before running {}-approximation algorithm'.format(
+                                  algorithm),
                               render=False)
         print('-----finished processing-----')
 
@@ -838,7 +974,8 @@ def ShowDifference(graph, algorithm, h, width='1200px', height='600px', x='', y=
                               width=width,
                               height=height,
                               show_edge_value=show_edge_value,
-                              title='network after running {}-approximation algorithm'.format(algorithm),
+                              title='network after running {}-approximation algorithm'.format(
+                                  algorithm),
                               render=False)
         print('-----finished processing-----')
 
@@ -851,7 +988,8 @@ def ShowDifference(graph, algorithm, h, width='1200px', height='600px', x='', y=
                            height=height,
                            is_draggable=False,
                            show_edge_value=show_edge_value,
-                           title='network before running {}-approximation algorithm'.format(algorithm),
+                           title='network before running {}-approximation algorithm'.format(
+                               algorithm),
                            render=False)
         print('-----finished processing-----')
 
@@ -862,7 +1000,8 @@ def ShowDifference(graph, algorithm, h, width='1200px', height='600px', x='', y=
                            height=height,
                            is_draggable=False,
                            show_edge_value=show_edge_value,
-                           title='network after running {}-approximation algorithm'.format(algorithm),
+                           title='network after running {}-approximation algorithm'.format(
+                               algorithm),
                            render=False)
         print('-----finished processing-----')
 
@@ -876,7 +1015,8 @@ def ShowDifference(graph, algorithm, h, width='1200px', height='600px', x='', y=
                               width="1400px",
                               height="800px",
                               show_edge_value=show_edge_value,
-                              title='network before running {}-approximation algorithm'.format(algorithm),
+                              title='network before running {}-approximation algorithm'.format(
+                                  algorithm),
                               render=False)
         print('-----finished processing-----')
 
@@ -888,7 +1028,8 @@ def ShowDifference(graph, algorithm, h, width='1200px', height='600px', x='', y=
                               width="1400px",
                               height="800px",
                               show_edge_value=show_edge_value,
-                              title='network after running {}-approximation algorithm'.format(algorithm),
+                              title='network after running {}-approximation algorithm'.format(
+                                  algorithm),
                               render=False)
         print('-----finished processing-----')
 

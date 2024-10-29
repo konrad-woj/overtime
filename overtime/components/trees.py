@@ -4,7 +4,6 @@ from overtime.components.nodes import ForemostNodes
 from overtime.components.arcs import TemporalArcs
 
 
-
 class ForemostTree(TemporalDiGraph):
     """
         A class which represents a static, undirected graph consisting of nodes and edges.

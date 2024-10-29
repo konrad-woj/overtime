@@ -1,8 +1,7 @@
 
 import unittest
 
-from overtime.components import Graph, Node, Nodes
-
+from overtime.components import Graph
 
 
 class NodeTest(unittest.TestCase):
@@ -24,7 +23,6 @@ class NodeTest(unittest.TestCase):
         
         self.node = self.graph.nodes.get('b')
 
-
     def test_node1of(self):
         """
             Test that edges which have node1 'b' can be retrieved.
@@ -34,7 +32,6 @@ class NodeTest(unittest.TestCase):
             ['b-c', 'b-d'],
             sorted(edges.labels())
         )
-
 
     def test_node2of(self):
         """
@@ -46,7 +43,6 @@ class NodeTest(unittest.TestCase):
             sorted(edges.labels())
         )
 
-
     def test_nodeof(self):
         """
             Test that edges which have node 'b' can be retrieved.
@@ -57,7 +53,6 @@ class NodeTest(unittest.TestCase):
             sorted(edges.labels())
         )
 
-
     def test_neighbours(self):
         """
             Test that neighbouring nodes of node 'b' can be retrieved.
@@ -67,7 +62,6 @@ class NodeTest(unittest.TestCase):
             ['a', 'c', 'd'],
             sorted(nodes.labels())
         )
-
 
 
 class NodesTest(unittest.TestCase):
@@ -89,7 +83,6 @@ class NodesTest(unittest.TestCase):
         
         self.nodes = self.graph.nodes
 
-
     def test_aslist(self):
         """
             Test that nodes can be returned as a list.
@@ -99,7 +92,6 @@ class NodesTest(unittest.TestCase):
             6,
             len(nodes_list)
         )
-
 
     def test_as_ordered_list(self):
         """
@@ -114,7 +106,6 @@ class NodesTest(unittest.TestCase):
             node_labels
         )
 
-
     def test_add(self):
         """
             Test that a node can be added to nodes.
@@ -122,14 +113,12 @@ class NodesTest(unittest.TestCase):
         node = self.nodes.add('g')
         self.assertIn(node, self.nodes.set)
 
-
     def test_remove(self):
         """
             Test that a node can be removed from nodes.
         """
         self.nodes.remove('c')
         self.assertNotIn('c', self.nodes.labels())
-
 
     def test_subset(self):
         """
@@ -143,7 +132,6 @@ class NodesTest(unittest.TestCase):
             sorted(subset.labels())
         )
 
-
     def test_get(self):
         """
             Test that a node can be retrieved from nodes through it's label.
@@ -151,20 +139,17 @@ class NodesTest(unittest.TestCase):
         node = self.nodes.get('d')
         self.assertEqual('d', node.label)
 
-
     def test_exists(self):
         """
             Test that a node's existence in nodes can be verified through it's label.
         """
         self.assertTrue(self.nodes.exists('d'))
 
-
     def test_counts(self):
         """
             Test the number of nodes can be retrieved.
         """
         self.assertEqual(6, self.nodes.count())
-
 
     def test_labels(self):
         """
